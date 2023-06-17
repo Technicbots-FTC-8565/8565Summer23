@@ -10,6 +10,8 @@
 // Custom definitions may go here
 // Include common definitions from above.
 apply from: '../build.common.gradle'
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 dependencies {
     /*
      * Other Modules
@@ -18,10 +20,7 @@ dependencies {
     implementation('com.acmerobotics.dashboard:dashboard:0.4.8') {
         exclude group: 'org.firstinspires.ftc'
     }
-    implementation ('com.acmerobotics.roadrunner:core:1.0.0-beta1') {
-        exclude group: 'org.firstinspires.ftc'
-    }
-    implementation ('com.acmerobotics.roadrunner:actions:1.0.0-beta1') {
+    implementation ('com.acmerobotics.roadrunner:core:0.5.6') {
         exclude group: 'org.firstinspires.ftc'
     }
 
