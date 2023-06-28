@@ -10,12 +10,19 @@
 // Custom definitions may go here
 // Include common definitions from above.
 
+/*
 plugins {
     id "io.freefair.lombok" version "6.6.1"
 }
+*/
+
 apply from: '../build.common.gradle'
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+
+android {
+    namespace 'org.firstinspires.ftc.teamcode'
+}
 dependencies {
     /*
      * Other Modules
@@ -35,6 +42,7 @@ dependencies {
 }
 
 
+/*
 project.ext.lombokVersion = "1.18.24"
 dependencies {
     compileOnly "org.projectlombok:lombok:$lombokVersion"
@@ -43,3 +51,4 @@ dependencies {
     testCompileOnly "org.projectlombok:lombok:$lombokVersion"
     testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
 }
+*/

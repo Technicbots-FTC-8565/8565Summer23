@@ -7,6 +7,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 28
     }
+    namespace 'org.firstinspires.inspection'
 }
 
 dependencies {

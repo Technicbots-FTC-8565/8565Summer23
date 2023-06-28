@@ -1,6 +1,8 @@
 apply plugin: 'com.android.library'
 
 android {
+
+    namespace 'com.google.blocks'
     compileSdkVersion 29
 
     defaultConfig {

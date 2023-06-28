@@ -3,6 +3,8 @@ import java.text.SimpleDateFormat
 apply plugin: 'com.android.library'
 
 android {
+
+    namespace 'com.qualcomm.ftcrobotcontroller'
     compileSdkVersion 29
 
     defaultConfig {

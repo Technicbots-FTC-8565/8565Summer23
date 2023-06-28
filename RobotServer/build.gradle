@@ -8,6 +8,7 @@ android {
         targetSdkVersion 28
 
     }
+    namespace 'org.firstinspires.ftc.robotcore.internal.webserver'
 }
 
 dependencies {
