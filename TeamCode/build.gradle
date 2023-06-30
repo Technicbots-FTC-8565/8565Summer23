@@ -23,6 +23,7 @@ apply plugin: 'kotlin-android'
 android {
     namespace 'org.firstinspires.ftc.teamcode'
 }
+
 dependencies {
     /*
      * Other Modules
@@ -42,7 +43,6 @@ dependencies {
 
     implementation 'org.ejml:ejml-all:0.43'
 }
-
 
 /*
 project.ext.lombokVersion = "1.18.24"
