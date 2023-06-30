@@ -92,7 +92,7 @@ public abstract class ExtendedKalmanFilter {
      * @param y The most recent measurement vector (could be cached, in which case it is ignored if the proper delta time has not elapsed)
      * @return The current state estimate
      */
-    public SimpleMatrix masterUpdate(DMatrixRMaj u, DMatrixRMaj y) {
+    public SimpleMatrix iterate(DMatrixRMaj u, DMatrixRMaj y) {
         this.deltaTime = (System.nanoTime() - prevTime) / 1000; // dt is gonna be in terms of ms
         this.predict(u);
         if (this.deltaTime >= this.updateDelta) this.update(y);

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.localization;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.simple.SimpleMatrix;
@@ -17,13 +18,15 @@ public class Relocalizer extends ExtendedKalmanFilter {
     public static double R1 = 1;
     public static double R2 = 1;
     public static double R3 = 1;
+    private ThreeWheelTrackingLocalizer odometry;
 
-    public Relocalizer(Pose2d initialPose) {
+    public Relocalizer(Pose2d initialPose, HardwareMap hardwareMap) {
         super(new DMatrixRMaj(), new DMatrixRMaj(), new DMatrixRMaj());
+        this.odometry = new ThreeWheelTrackingLocalizer(hardwareMap);
     }
 
     public static DMatrixRMaj poseToMatrix(Pose2d pose) {
-        return new DMatrixRMaj();
+        return new DMatrixRMaj(new double[] { pose.getX(), pose.getY(), pose.getHeading() });
     }
     /**
      * describes how the state evolves
@@ -61,5 +64,9 @@ public class Relocalizer extends ExtendedKalmanFilter {
     @Override
     public SimpleMatrix H() {
         return null;
+    }
+
+    public void update() {
+
     }
 }

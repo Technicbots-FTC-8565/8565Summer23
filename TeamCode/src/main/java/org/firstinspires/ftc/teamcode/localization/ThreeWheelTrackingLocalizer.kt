@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.localization
 
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.roadrunner.geometry.Pose2d
+import com.acmerobotics.roadrunner.kinematics.Kinematics
 import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.HardwareMap
@@ -23,7 +24,7 @@ import java.util.Arrays
 *
 */
 @Config
-class StandardTrackingWheelLocalizer(
+class ThreeWheelTrackingLocalizer(
     hardwareMap: HardwareMap,
     private val lastEncPositions: MutableList<Int>,
     private val lastEncVels: MutableList<Int>
@@ -78,8 +79,12 @@ class StandardTrackingWheelLocalizer(
         )
     }
 
+    fun setPoseEstimate(estimate: Pose2d) {
+        this.poseEstimate = poseEstimate
+    }
+
     /**
-     * Only here for reference so I know how to analytically calculate the Jacobian in the EKF
+     * Converts the pose delta from the current wheel velocities
      */
     fun calculatePoseDelta(): Pose2d {
         val u = getWheelVelocities()
