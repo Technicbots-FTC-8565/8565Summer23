@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.simple.SimpleMatrix;
 
-import java.util.List;
 import java.util.Objects;
 
 @Config
@@ -22,7 +21,7 @@ public class Relocalizer extends ExtendedKalmanFilter {
     public static double R2 = 1;
     public static double R3 = 1;
     private ThreeWheelTrackingLocalizer odometry;
-    private Rev2mDistanceDriver distanceDriver;
+    private MountedDistanceModule distanceDriver;
 
     public Relocalizer(HardwareMap hardwareMap, Pose2d initialPose) {
         // construct diagonal Q and R noise cov matrices
@@ -36,7 +35,7 @@ public class Relocalizer extends ExtendedKalmanFilter {
                 new double[] { 0, 0, R3 }
         }), poseToMatrix(initialPose));
         this.odometry = new ThreeWheelTrackingLocalizer(hardwareMap);
-        this.distanceDriver = new Rev2mDistanceDriver(hardwareMap);
+        this.distanceDriver = new MountedDistanceModule(hardwareMap);
     }
 
     public static DMatrixRMaj poseToMatrix(Pose2d pose) {

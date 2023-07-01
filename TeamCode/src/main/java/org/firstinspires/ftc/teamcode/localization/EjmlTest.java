@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.localization;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.simple.SimpleMatrix;
@@ -20,6 +21,7 @@ public class EjmlTest {
         System.out.println(testCov);
         System.out.println(testCov.mult(matrix));
         System.out.println(testCov.get(0));
+        System.out.println(new Vector2d(-100, -100).minus(new Vector2d()).angle());
         System.exit(0);
     }
 }
