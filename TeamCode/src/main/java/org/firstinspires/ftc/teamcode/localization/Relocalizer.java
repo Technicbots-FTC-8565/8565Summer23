@@ -24,7 +24,7 @@ public class Relocalizer extends ExtendedKalmanFilter {
     private ThreeWheelTrackingLocalizer odometry;
     private Rev2mDistanceDriver distanceDriver;
 
-    public Relocalizer(HardwareMap hardwareMap, List<Integer> lastTrackingEncPositions, List<Integer> lastTrackingEncVels, Pose2d initialPose) {
+    public Relocalizer(HardwareMap hardwareMap, Pose2d initialPose) {
         // construct diagonal Q and R noise cov matrices
         super(new DMatrixRMaj(new double[][] {
                 new double[] { Q1, 0, 0 },
@@ -35,7 +35,7 @@ public class Relocalizer extends ExtendedKalmanFilter {
                 new double[] { 0, R2, 0 },
                 new double[] { 0, 0, R3 }
         }), poseToMatrix(initialPose));
-        this.odometry = new ThreeWheelTrackingLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels);
+        this.odometry = new ThreeWheelTrackingLocalizer(hardwareMap);
         this.distanceDriver = new Rev2mDistanceDriver(hardwareMap);
     }
 
@@ -64,7 +64,17 @@ public class Relocalizer extends ExtendedKalmanFilter {
      */
     @Override
     public SimpleMatrix F(DMatrixRMaj u) {
-        return null;
+        double[] data = u.getData();
+        double deltaX = (data[0] + data[1]) / 2;
+        double deltaTheta = (data[0] - data[1]) / ThreeWheelTrackingLocalizer.LATERAL_DISTANCE;
+        double deltaY = data[2] - ThreeWheelTrackingLocalizer.FORWARD_OFFSET * deltaTheta;
+        double theta = this.x.get(2);
+        // Analytically solved jacobian
+        return new SimpleMatrix(new double[][] {
+                new double[] { 0, 0, -deltaX * Math.sin(theta) - deltaY * Math.cos(theta) },
+                new double[] { 0, 0, deltaX * Math.cos(theta) - deltaY * Math.sin(theta) },
+                new double[] { 0, 0, 0 }
+        });
     }
 
     /**

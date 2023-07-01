@@ -9,7 +9,7 @@ public abstract class ExtendedKalmanFilter {
     private SimpleMatrix Q; // process (predict step) noise cov matrix
     private SimpleMatrix R; // measurement (update step) noise cov matrix
 
-    private SimpleMatrix x;
+    protected SimpleMatrix x;
     private SimpleMatrix P; // covariance error
     private long prevTime;
 
@@ -96,6 +96,10 @@ public abstract class ExtendedKalmanFilter {
         this.deltaTime = (System.nanoTime() - prevTime) / 1000; // dt is gonna be in terms of ms
         this.predict(u);
         if (this.deltaTime >= this.updateDelta) this.update(y);
+        return this.x;
+    }
+
+    public SimpleMatrix getEstimate() {
         return this.x;
     }
 }

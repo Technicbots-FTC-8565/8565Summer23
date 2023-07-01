@@ -19,6 +19,7 @@ public class EjmlTest {
         System.out.println(maj);
         System.out.println(testCov);
         System.out.println(testCov.mult(matrix));
+        System.out.println(testCov.get(0));
         System.exit(0);
     }
 }
