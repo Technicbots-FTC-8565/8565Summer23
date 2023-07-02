@@ -10,12 +10,12 @@ class MountedDistanceModule(hardwareMap: HardwareMap) {
     private val dR = MountedDistanceSensor(hardwareMap.get(Rev2mDistanceSensor::class.java, "distR"), Pose2d())
     private val dF = MountedDistanceSensor(hardwareMap.get(Rev2mDistanceSensor::class.java, "distF"), Pose2d())
 
-    fun getDistances(): Array<Double> {
-        return arrayOf(dL.getDistance(), dR.getDistance(), dF.getDistance())
+    fun getDistances(): DoubleArray {
+        return doubleArrayOf(dL.getDistance(), dR.getDistance(), dF.getDistance())
     }
 
-    fun getPredictedDistances(robotPose: Pose2d): Array<Double> {
-        return arrayOf(dL.getPredictedDistance(robotPose), dR.getPredictedDistance(robotPose), dF.getPredictedDistance(robotPose))
+    fun getPredictedDistances(robotPose: Pose2d): DoubleArray {
+        return doubleArrayOf(dL.getPredictedDistance(robotPose), dR.getPredictedDistance(robotPose), dF.getPredictedDistance(robotPose))
     }
 
     companion object {

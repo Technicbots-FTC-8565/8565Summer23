@@ -7,7 +7,9 @@ import com.qualcomm.robotcore.util.Range
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import kotlin.math.PI
 import kotlin.math.cos
+import kotlin.math.pow
 import kotlin.math.sin
+import kotlin.math.tan
 
 @Config
 class MountedDistanceSensor(private val sensor: Rev2mDistanceSensor, mountingPose: Pose2d) {
@@ -41,6 +43,32 @@ class MountedDistanceSensor(private val sensor: Rev2mDistanceSensor, mountingPos
         return this.sensor.getDistance(DistanceUnit.INCH)
     }
 
+    /**
+     * Partial derivative of the sensor model w.r.t. the incoming robot pose (state)
+     */
+    fun partialDerivative(robotPose: Pose2d): DoubleArray {
+        val wall = getFacingWall(robotPose)
+        val currPose = this.getActualPose(robotPose)
+        val x = currPose.x
+        val y = currPose.y
+        val theta = currPose.heading // theta should always be between 0 and 2pi rad
+
+        return when (wall) {
+            Field.Wall.TOP -> {
+                doubleArrayOf(0.0, 0.0, Range.clip((y - wall.y) * cos(theta) / sin(PI / 2 - theta).pow(2), MIN_DIST, MAX_DIST))
+            }
+            Field.Wall.RIGHT -> {
+                doubleArrayOf(0.0, 0.0, Range.clip((wall.x - x) / cos(theta) * tan(theta), MIN_DIST, MAX_DIST))
+            }
+            Field.Wall.LEFT -> {
+                doubleArrayOf(0.0, 0.0, Range.clip((x - wall.x) / cos(theta) * tan(theta), MIN_DIST, MAX_DIST))
+            }
+            else -> {
+                doubleArrayOf(0.0, 0.0, Range.clip((y - wall.y) / sin(theta) / tan(theta), MIN_DIST, MAX_DIST))
+            }
+        }
+    }
+
     fun getPredictedDistance(robotPose: Pose2d): Double {
         val wall = getFacingWall(robotPose)
         val currPose = this.getActualPose(robotPose)
@@ -56,20 +84,20 @@ class MountedDistanceSensor(private val sensor: Rev2mDistanceSensor, mountingPos
         }
     }
 
-    /**
-     * Checks to see if an angle is between two other angles, with all angles on a 0 to 2pi rad range and starting from the x-axis going ccw
-     */
-    fun isBetween(start: Double, end: Double, angle: Double): Boolean {
-        val clampedEnd = if ((end - start) < 0.0) end - start + 2 * PI  else  end - start
-        val clampedActual = if ((angle - start) < 0.0) angle - start + 2 * PI else  angle - start
-        return clampedEnd < clampedActual
-    }
-
     companion object {
         @JvmStatic
         val MIN_DIST = 0.0
         /** Maximum distance reading of the sensor, in inches (equivalent to 2m) */
         @JvmStatic
         val MAX_DIST = 78.7401575
+
+        /**
+         * Checks to see if an angle is between two other angles, with all angles on a 0 to 2pi rad range and starting from the x-axis going ccw
+         */
+        private fun isBetween(start: Double, end: Double, angle: Double): Boolean {
+            val clampedEnd = if ((end - start) < 0.0) end - start + 2 * PI  else  end - start
+            val clampedActual = if ((angle - start) < 0.0) angle - start + 2 * PI else  angle - start
+            return clampedEnd < clampedActual
+        }
     }
 }

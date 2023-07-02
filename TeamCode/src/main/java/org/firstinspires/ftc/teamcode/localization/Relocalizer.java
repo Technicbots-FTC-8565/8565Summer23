@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.simple.SimpleMatrix;
 
@@ -42,8 +43,8 @@ public class Relocalizer extends ExtendedKalmanFilter {
         return new DMatrixRMaj(new double[] { pose.getX(), pose.getY(), pose.getHeading() });
     }
 
-    public static Pose2d matrixToPose(DMatrixRMaj matrix) {
-        return new Pose2d(matrix.data[0], matrix.data[1], matrix.data[2]);
+    public static Pose2d matrixToPose(SimpleMatrix matrix) {
+        return new Pose2d(matrix.get(0), matrix.get(1), matrix.get(2));
     }
     /**
      * describes how the state evolves
@@ -83,7 +84,7 @@ public class Relocalizer extends ExtendedKalmanFilter {
      */
     @Override
     public SimpleMatrix h() {
-        return null;
+        return new SimpleMatrix(new DMatrixRMaj(distanceDriver.getPredictedDistances(matrixToPose(this.x))));
     }
 
     /**
@@ -95,6 +96,6 @@ public class Relocalizer extends ExtendedKalmanFilter {
     }
 
     public void update() {
-        super.iterate(new DMatrixRMaj((double[][]) Objects.requireNonNull(odometry.getWheelVelocities().toArray())), new DMatrixRMaj((double[][]) distanceDriver.getDistances().toArray()));
+        super.iterate(new DMatrixRMaj(ArrayUtils.toPrimitive(Objects.requireNonNull(odometry.getWheelVelocities()).toArray(new Double[0]))), new DMatrixRMaj(distanceDriver.getDistances()));
     }
 }
