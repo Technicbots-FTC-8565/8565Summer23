@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.apache.commons.lang3.ArrayUtils;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.simple.SimpleMatrix;
+import org.firstinspires.ftc.teamcode.localization.drive.ThreeWheelTrackingLocalizer;
+import org.firstinspires.ftc.teamcode.localization.util.MountedDistanceModule;
 
 import java.util.Objects;
 
@@ -22,7 +24,7 @@ public class Relocalizer extends ExtendedKalmanFilter {
     public static double R2 = 1;
     public static double R3 = 1;
     private ThreeWheelTrackingLocalizer odometry;
-    private MountedDistanceModule distanceDriver;
+    private MountedDistanceModule distanceModule;
 
     public Relocalizer(HardwareMap hardwareMap, Pose2d initialPose) {
         // construct diagonal Q and R noise cov matrices
@@ -34,9 +36,9 @@ public class Relocalizer extends ExtendedKalmanFilter {
                 new double[] { R1, 0, 0 },
                 new double[] { 0, R2, 0 },
                 new double[] { 0, 0, R3 }
-        }), poseToMatrix(initialPose));
+        }), poseToMatrix(initialPose), MountedDistanceModule.getCACHE_TIME());
         this.odometry = new ThreeWheelTrackingLocalizer(hardwareMap);
-        this.distanceDriver = new MountedDistanceModule(hardwareMap);
+        this.distanceModule = new MountedDistanceModule(hardwareMap);
     }
 
     public static DMatrixRMaj poseToMatrix(Pose2d pose) {
@@ -84,7 +86,7 @@ public class Relocalizer extends ExtendedKalmanFilter {
      */
     @Override
     public SimpleMatrix h() {
-        return new SimpleMatrix(new DMatrixRMaj(distanceDriver.getPredictedDistances(matrixToPose(this.x))));
+        return new SimpleMatrix(new DMatrixRMaj(distanceModule.getPredictedDistances(matrixToPose(this.x))));
     }
 
     /**
@@ -92,10 +94,10 @@ public class Relocalizer extends ExtendedKalmanFilter {
      */
     @Override
     public SimpleMatrix H() {
-        return null;
+        return distanceModule.jacobian(matrixToPose(this.x));
     }
 
-    public void update() {
-        super.iterate(new DMatrixRMaj(ArrayUtils.toPrimitive(Objects.requireNonNull(odometry.getWheelVelocities()).toArray(new Double[0]))), new DMatrixRMaj(distanceDriver.getDistances()));
+    public Pose2d update() {
+        return matrixToPose(super.iterate(new DMatrixRMaj(ArrayUtils.toPrimitive(Objects.requireNonNull(odometry.getWheelVelocities()).toArray(new Double[0]))), new DMatrixRMaj(distanceModule.getDistances())));
     }
 }

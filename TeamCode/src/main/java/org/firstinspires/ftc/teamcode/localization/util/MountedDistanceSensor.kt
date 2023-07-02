@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.localization
+package org.firstinspires.ftc.teamcode.localization.util
 
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.roadrunner.geometry.Pose2d
@@ -79,7 +79,7 @@ class MountedDistanceSensor(private val sensor: Rev2mDistanceSensor, mountingPos
         return when (wall) {
             Field.Wall.TOP -> Range.clip((wall.y - y) / cos(PI / 2 - theta), MIN_DIST, MAX_DIST)
             Field.Wall.RIGHT -> Range.clip((wall.x - x) / cos(theta), MIN_DIST, MAX_DIST)
-            Field.Wall.LEFT -> Range.clip((x - wall.x) / cos(theta - PI), MIN_DIST, MAX_DIST) 
+            Field.Wall.LEFT -> Range.clip((x - wall.x) / cos(theta - PI), MIN_DIST, MAX_DIST)
             else -> Range.clip((y - wall.y) / cos(3 * PI / 2 - theta), MIN_DIST, MAX_DIST)
         }
     }

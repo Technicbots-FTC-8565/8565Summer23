@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.localization
+package org.firstinspires.ftc.teamcode.localization.util
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.ejml.simple.SimpleMatrix
 
 class MountedDistanceModule(hardwareMap: HardwareMap) {
     // TODO: tune these poses for an actual robot
@@ -16,6 +17,17 @@ class MountedDistanceModule(hardwareMap: HardwareMap) {
 
     fun getPredictedDistances(robotPose: Pose2d): DoubleArray {
         return doubleArrayOf(dL.getPredictedDistance(robotPose), dR.getPredictedDistance(robotPose), dF.getPredictedDistance(robotPose))
+    }
+
+    /**
+     * @return The jacobian of the sensor model w.r.t the incoming robot pose (state)
+     */
+    fun jacobian(robotPose: Pose2d): SimpleMatrix {
+        return SimpleMatrix(arrayOf(
+            dL.partialDerivative(robotPose),
+            dR.partialDerivative(robotPose),
+            dF.partialDerivative(robotPose)
+        ))
     }
 
     companion object {
