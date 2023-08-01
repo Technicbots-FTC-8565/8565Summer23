@@ -240,7 +240,7 @@ public class MecanumDriveCancellablev3 extends MecanumDrive {
 	public void update() {
 		// updatePoseEstimate();
 		setPose(relocalizer.update());
-		DriveSignal signal = trajectorySequenceRunner.update(getPose(), getPoseVelocity());
+		DriveSignal signal = trajectorySequenceRunner.update(getPose(), getPoseVelocity(), relocalizer);
 		setDriveSignal(signal);
 	}
 

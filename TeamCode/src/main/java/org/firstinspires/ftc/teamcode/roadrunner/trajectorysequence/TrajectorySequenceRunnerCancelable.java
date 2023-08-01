@@ -16,6 +16,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryMarker;
 import com.acmerobotics.roadrunner.util.NanoClock;
 
+import org.firstinspires.ftc.teamcode.localization.Relocalizer;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.sequencesegment.SequenceSegment;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.sequencesegment.TrajectorySegment;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.sequencesegment.TurnSegment;
@@ -77,7 +78,7 @@ public class TrajectorySequenceRunnerCancelable {
     }
 
     public @NonNull
-    DriveSignal update(Pose2d poseEstimate, Pose2d poseVelocity) {
+    DriveSignal update(Pose2d poseEstimate, Pose2d poseVelocity, Relocalizer relocalizer) {
         Pose2d targetPose = null;
         DriveSignal driveSignal = null;
 
@@ -192,7 +193,7 @@ public class TrajectorySequenceRunnerCancelable {
         packet.put("yError", getLastPoseError().getY());
         packet.put("headingError (deg)", Math.toDegrees(getLastPoseError().getHeading()));
 
-        draw(fieldOverlay, currentTrajectorySequence, currentSegment, targetPose, poseEstimate);
+        draw(fieldOverlay, currentTrajectorySequence, currentSegment, targetPose, poseEstimate, relocalizer);
 
         dashboard.sendTelemetryPacket(packet);
 
@@ -202,7 +203,7 @@ public class TrajectorySequenceRunnerCancelable {
     private void draw(
             Canvas fieldOverlay,
             TrajectorySequence sequence, SequenceSegment currentSegment,
-            Pose2d targetPose, Pose2d poseEstimate
+            Pose2d targetPose, Pose2d poseEstimate, Relocalizer relocalizer
     ) {
         if (sequence != null) {
             for (int i = 0; i < sequence.size(); i++) {
@@ -261,6 +262,8 @@ public class TrajectorySequenceRunnerCancelable {
 
         fieldOverlay.setStroke("#3F51B5");
         DashboardUtil.drawRobot(fieldOverlay, poseEstimate);
+
+        relocalizer.draw(fieldOverlay);
     }
 
     public Pose2d getLastPoseError() {

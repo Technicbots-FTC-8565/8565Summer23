@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.localization.util
 
+import com.acmerobotics.dashboard.canvas.Canvas
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor
@@ -14,6 +15,16 @@ import kotlin.math.tan
 @Config
 class MountedDistanceSensor(private val sensor: Rev2mDistanceSensor, mountingPose: Pose2d) {
     val pose = mountingPose
+    val lowPassFilter: LowPassFilter = LowPassFilter(LPF_ALPHA)
+
+    fun draw(canvas: Canvas, robotPose: Pose2d) {
+        // canvas.setStrokeWidth(STROKE_WIDTH)
+        val distance = getDistance()
+        if (distance > MAX_DIST - 2) canvas.setStroke("#db1414")
+        else canvas.setStroke("#87f542")
+        val p = getActualPose(robotPose)
+        canvas.strokeLine(p.x, p.y, p.x + p.headingVec().x * distance, p.y + p.headingVec().y * distance)
+    }
 
     fun getActualPose(robotPose: Pose2d): Pose2d {
         val x = this.pose.x
@@ -40,7 +51,7 @@ class MountedDistanceSensor(private val sensor: Rev2mDistanceSensor, mountingPos
      * Distance reading of the sensor, in inches
      */
     fun getDistance(): Double {
-        return this.sensor.getDistance(DistanceUnit.INCH)
+        return Range.clip(lowPassFilter.update(this.sensor.getDistance(DistanceUnit.INCH)), MIN_DIST, MAX_DIST)
     }
 
     /**
@@ -90,6 +101,12 @@ class MountedDistanceSensor(private val sensor: Rev2mDistanceSensor, mountingPos
         /** Maximum distance reading of the sensor, in inches (equivalent to 2m) */
         @JvmStatic
         val MAX_DIST = 78.7401575
+        /** Stroke width of the rendered distance lines on dashboard */
+        @JvmStatic
+        val STROKE_WIDTH = 3
+        /** Low pass filter alpha coefficient (higher = greater weight to recent values) */
+        @JvmStatic
+        val LPF_ALPHA = 0.7
 
         /**
          * Checks to see if an angle is between two other angles, with all angles on a 0 to 2pi rad range and starting from the x-axis going ccw

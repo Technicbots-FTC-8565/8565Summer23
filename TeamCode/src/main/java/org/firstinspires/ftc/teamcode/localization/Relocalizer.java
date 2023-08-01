@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.localization;
 
+import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -98,6 +99,10 @@ public class Relocalizer extends ExtendedKalmanFilter {
     }
 
     public Pose2d update() {
-        return matrixToPose(super.iterate(new DMatrixRMaj(ArrayUtils.toPrimitive(Objects.requireNonNull(odometry.getWheelVelocities()).toArray(new Double[0]))), new DMatrixRMaj(distanceModule.getDistances())));
+        return matrixToPose(this.iterate(new DMatrixRMaj(ArrayUtils.toPrimitive(Objects.requireNonNull(odometry.getWheelVelocities()).toArray(new Double[0]))), new DMatrixRMaj(distanceModule.getDistances())));
+    }
+
+    public void draw(Canvas canvas) {
+        distanceModule.draw(canvas, matrixToPose(this.x));
     }
 }
