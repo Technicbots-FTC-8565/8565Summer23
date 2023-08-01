@@ -1,16 +1,16 @@
-package org.firstinspires.ftc.teamcode.localization.drive;
+package org.firstinspires.ftc.teamcode.roadrunner.drive;
 
-import static org.firstinspires.ftc.teamcode.localization.drive.DriveConstantsv3.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.localization.drive.DriveConstantsv3.MAX_ANG_ACCEL;
-import static org.firstinspires.ftc.teamcode.localization.drive.DriveConstantsv3.MAX_ANG_VEL;
-import static org.firstinspires.ftc.teamcode.localization.drive.DriveConstantsv3.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.localization.drive.DriveConstantsv3.MOTOR_VELO_PID;
-import static org.firstinspires.ftc.teamcode.localization.drive.DriveConstantsv3.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.localization.drive.DriveConstantsv3.TRACK_WIDTH;
-import static org.firstinspires.ftc.teamcode.localization.drive.DriveConstantsv3.encoderTicksToInches;
-import static org.firstinspires.ftc.teamcode.localization.drive.DriveConstantsv3.kA;
-import static org.firstinspires.ftc.teamcode.localization.drive.DriveConstantsv3.kStatic;
-import static org.firstinspires.ftc.teamcode.localization.drive.DriveConstantsv3.kV;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstantsv3.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstantsv3.MAX_ANG_ACCEL;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstantsv3.MAX_ANG_VEL;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstantsv3.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstantsv3.MOTOR_VELO_PID;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstantsv3.RUN_USING_ENCODER;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstantsv3.TRACK_WIDTH;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstantsv3.encoderTicksToInches;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstantsv3.kA;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstantsv3.kStatic;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstantsv3.kV;
 
 import androidx.annotation.NonNull;
 
@@ -40,10 +40,11 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.teamcode.localization.Relocalizer;
-import org.firstinspires.ftc.teamcode.localization.drive.roadrunnerutil.LynxModuleUtil;
-import org.firstinspires.ftc.teamcode.localization.drive.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.localization.drive.trajectorysequence.TrajectorySequenceBuilder;
-import org.firstinspires.ftc.teamcode.localization.drive.trajectorysequence.TrajectorySequenceRunnerCancelable;
+import org.firstinspires.ftc.teamcode.roadrunner.util.LynxModuleUtil;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceRunnerCancelable;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
 import java.util.ArrayList;
 import java.util.Arrays;

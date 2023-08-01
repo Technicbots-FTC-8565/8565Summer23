@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDriveCancellablev3;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.ThreeWheelTrackingLocalizer;
 
 /**
  * This routine determines the effective forward offset for the lateral tracking wheel.
@@ -45,12 +45,12 @@ public class TrackingWheelForwardOffsetTuner extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        MecanumDriveCancellablev3 drive = new MecanumDriveCancellablev3(hardwareMap);
 
-        if (!(drive.getLocalizer() instanceof StandardTrackingWheelLocalizer)) {
-            RobotLog.setGlobalErrorMsg("StandardTrackingWheelLocalizer is not being set in the "
-                    + "drive class. Ensure that \"setLocalizer(new StandardTrackingWheelLocalizer"
-                    + "(hardwareMap));\" is called in SampleMecanumDrive.java");
+        if (!(drive.getLocalizer() instanceof ThreeWheelTrackingLocalizer)) {
+            RobotLog.setGlobalErrorMsg("ThreeWheelTrackingLocalizer is not being set in the "
+                    + "drive class. Ensure that \"setLocalizer(new ThreeWheelTrackingLocalizer"
+                    + "(hardwareMap));\" is called in MecanumDriveCancellablev3.java");
         }
 
         telemetry.addLine("Press play to begin the forward offset tuner");
@@ -83,7 +83,7 @@ public class TrackingWheelForwardOffsetTuner extends LinearOpMode {
                 drive.update();
             }
 
-            double forwardOffset = StandardTrackingWheelLocalizer.FORWARD_OFFSET +
+            double forwardOffset = ThreeWheelTrackingLocalizer.FORWARD_OFFSET +
                     drive.getPoseEstimate().getY() / headingAccumulator;
             forwardOffsetStats.add(forwardOffset);
 

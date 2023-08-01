@@ -1,16 +1,15 @@
 package org.firstinspires.ftc.teamcode.roadrunner.drive.opmode;
 
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.kA;
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.kStatic;
-import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.kV;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstantsv3.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstantsv3.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstantsv3.RUN_USING_ENCODER;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstantsv3.kA;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstantsv3.kStatic;
+import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstantsv3.kV;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.kinematics.Kinematics;
 import com.acmerobotics.roadrunner.profile.MotionProfile;
@@ -23,8 +22,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.MecanumDriveCancellablev3;
 
 import java.util.Objects;
 
@@ -37,7 +35,7 @@ import java.util.Objects;
  * you are using the Control Hub. Once you've successfully connected, start the program, and your
  * robot will begin moving forward and backward according to a motion profile. Your job is to graph
  * the velocity errors over time and adjust the feedforward coefficients. Once you've found a
- * satisfactory set of gains, add them to the appropriate fields in the DriveConstants.java file.
+ * satisfactory set of gains, add them to the appropriate fields in the DriveConstantsv3.java file.
  *
  * Pressing Y/Δ (Xbox/PS4) will pause the tuning process and enter driver override, allowing the
  * user to reset the position of the bot in the event that it drifts off the path.
@@ -50,7 +48,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
 
     private FtcDashboard dashboard = FtcDashboard.getInstance();
 
-    private SampleMecanumDrive drive;
+    private MecanumDriveCancellablev3 drive;
 
     enum Mode {
         DRIVER_MODE,
@@ -74,7 +72,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
 
         Telemetry telemetry = new MultipleTelemetry(this.telemetry, dashboard.getTelemetry());
 
-        drive = new SampleMecanumDrive(hardwareMap);
+        drive = new MecanumDriveCancellablev3(hardwareMap);
 
         final VoltageSensor voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
