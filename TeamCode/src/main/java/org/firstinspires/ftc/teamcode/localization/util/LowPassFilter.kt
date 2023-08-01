@@ -10,7 +10,7 @@ class LowPassFilter(initAlpha: Double) {
     var alpha = Range.clip(initAlpha, 0.0, 1.0)
     var out: Double = 0.0
 
-    fun setAlpha(newAlpha: Double) {
+    fun changeAlpha(newAlpha: Double) {
         this.alpha = Range.clip(newAlpha, 0.0, 1.0)
     }
 
