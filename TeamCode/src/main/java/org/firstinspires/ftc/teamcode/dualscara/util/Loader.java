@@ -47,17 +47,4 @@ public class Loader {
             throw new RuntimeException(e);
         }
     }
-
-    /*
-    public static void main(String[] args) {
-        File file = new File(".");
-        List<List<Point>> loadedPoints = load("calligraphy.csv", 336, 256, 1);
-        for (List<Point> i : loadedPoints) {
-            System.out.println("Starting new polyline segment");
-            for (Point j : i) {
-                System.out.println(j.x + ", " + j.y);
-            }
-        }
-    }
-    */
 }

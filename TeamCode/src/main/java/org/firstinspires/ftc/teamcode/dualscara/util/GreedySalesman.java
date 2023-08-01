@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.dualscara.util;
 
+import static org.firstinspires.ftc.teamcode.dualscara.util.Loader.load;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,7 +18,7 @@ public class GreedySalesman {
         
         Arrays.fill(visitedRouteList, 0);
         visitedRouteList[0] = 1; // start from 1st node
-        route[0] = 0; // start from 1st node
+        route[0] = 1; // start from 1st node
 
         // Traverse the adjacency matrix
         while (i < distances.length && j < distances[i].length) {
