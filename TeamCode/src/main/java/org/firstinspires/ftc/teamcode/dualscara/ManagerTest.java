@@ -21,7 +21,7 @@ public class ManagerTest extends LinearOpMode {
     public void runOpMode() {
         telemetry.addData("Status", "Loading polylines");
         telemetry.update();
-        List<List<Point>> segments = load("calligraphy.csv", CANVAS_WIDTH, CANVAS_HEIGHT, 1);
+        List<List<Point>> segments = load(this, "calligraphy.csv", CANVAS_WIDTH, CANVAS_HEIGHT, 1);
         telemetry.addData("Status", "Finished loading polylines");
         telemetry.update();
         telemetry.addData("Status", "Loading path segments");
