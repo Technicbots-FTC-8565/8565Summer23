@@ -29,6 +29,11 @@ public class ManagerTest extends LinearOpMode {
         telemetry.update();
         manager = new Manager(this, segments, route, CANVAS_WIDTH, CANVAS_HEIGHT);
 
+        telemetry.addData("Status", "Calibrating platform");
+        telemetry.update();
+        while (opModeInInit() && !opModeIsActive()) {
+            manager.platform.update(); // homing sequence runs
+        }
         telemetry.addData("Status", "Waiting for start");
         telemetry.update();
         waitForStart();

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.dualscara;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 public class Platform {
     private DcMotorEx left, right;
     public static double UP_SPEED = 0.5;
+    private Telemetry telemetry;
     public static double DOWN_SPEED = UP_SPEED;
     public static double CALIBRATING_SPEED = 0.15;
     public static int UP_POSITION = 50;
@@ -24,14 +25,21 @@ public class Platform {
     public static PIDFCoefficients CALIBRATING_PID = new PIDFCoefficients(1.5, 0, 0, 2.5);
     public static double STALL_CURRENT = 1000;
 
-    public Platform(LinearOpMode opMode) {
+    public final static int HOMING = 0;
+    public final static int READY = 1;
+
+    public int state;
+
+    public Platform(OpMode opMode) {
         HardwareMap hardwareMap = opMode.hardwareMap;
         left = hardwareMap.get(DcMotorEx.class, "leftPlatform");
         right = hardwareMap.get(DcMotorEx.class, "rightPlatform");
+        telemetry = opMode.telemetry;
+        state = HOMING;
         // left.setDirection(DcMotorSimple.Direction.REVERSE);
         initMotor(left);
         initMotor(right);
-        home(opMode);
+        home();
         down();
     }
 
@@ -57,6 +65,11 @@ public class Platform {
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        ready();
+    }
+
+    public void ready() {
+        state = READY;
     }
 
     public void setPosition(int position) {
@@ -64,6 +77,10 @@ public class Platform {
         else setSpeed(DOWN_SPEED);
         left.setTargetPosition(position);
         right.setTargetPosition(position);
+    }
+
+    public void inc(double amt) {
+        this.setPosition(this.getPosition() + (int) amt);
     }
 
     public void down() {
@@ -74,15 +91,24 @@ public class Platform {
         setPosition(UP_POSITION);
     }
 
-    public void home(LinearOpMode opMode) {
-        Telemetry telemetry = opMode.telemetry;
-        while (opMode.opModeInInit() && left.getCurrent(CurrentUnit.MILLIAMPS) < STALL_CURRENT && right.getCurrent(CurrentUnit.MILLIAMPS) < STALL_CURRENT) {
-            setSpeed(-CALIBRATING_SPEED);
-            telemetry.addData("Left Current", left.getCurrent(CurrentUnit.MILLIAMPS));
-            telemetry.addData("Right Current", right.getCurrent(CurrentUnit.MILLIAMPS));
-            telemetry.addData("Left Position", left.getCurrentPosition());
-            telemetry.addData("Right Position", right.getCurrentPosition());
+    public void home() {
+        state = HOMING;
+    }
+
+    public void telemetryDebug() {
+        telemetry.addData("Left Current", left.getCurrent(CurrentUnit.MILLIAMPS));
+        telemetry.addData("Right Current", right.getCurrent(CurrentUnit.MILLIAMPS));
+        telemetry.addData("Left Position", left.getCurrentPosition());
+        telemetry.addData("Right Position", right.getCurrentPosition());
+    }
+
+    public void update() {
+        if (state == HOMING) {
+            if (left.getCurrent(CurrentUnit.MILLIAMPS) < STALL_CURRENT && right.getCurrent(CurrentUnit.MILLIAMPS) < STALL_CURRENT) {
+                setSpeed(-CALIBRATING_SPEED);
+                telemetryDebug();
+            }
+            else stopCalibrating();
         }
-        stopCalibrating();
     }
 }
