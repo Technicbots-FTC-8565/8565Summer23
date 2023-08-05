@@ -13,7 +13,7 @@ public class DualSCARA {
 	public double T1, T2, x, y;
 	private double workingMode1, workingMode2, fkMode, xCache, yCache;
 	private Servo left, right;
-	public static double INIT_ANGLE = 0.4;
+	public static double INIT_ANGLE = 0.5;
 	public static double SERVO_ROM = Math.toRadians(270); // Range of motion of the servo, in radians
 	public static double SERVO_LEFT_DEFAULT = 0.5; // To get an angle of 0 on L2
 	public static double SERVO_RIGHT_DEFAULT = 0.5; // To get an angle of 0 on L1
@@ -71,8 +71,6 @@ public class DualSCARA {
 	}
 
 	public void enableIk() {
-		this.x = xCache;
-		this.y = yCache;
 		this.shouldIk = true;
 	}
 

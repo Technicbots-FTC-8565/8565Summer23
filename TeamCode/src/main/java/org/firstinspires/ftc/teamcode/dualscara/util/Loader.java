@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.dualscara.util;
 
+import android.util.Log;
+
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.teamcode.dualscara.util.Point;
@@ -9,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +29,8 @@ public class Loader {
      * @return The parsed points from the CSV file
      */
     public static List<List<Point>> load(String filename, double canvasWidth, double canvasHeight, double scaling) {
-        try (BufferedReader br = new BufferedReader(new FileReader("TeamCode/src/main/java/org/firstinspires/ftc/teamcode/dualscara/res/".concat(filename)))) {
+        Log.d("8565 file debug", FileSystems.getDefault().getPath(".").toAbsolutePath().toString());
+        try (BufferedReader br = new BufferedReader(new FileReader("sdcard/FIRST/DualSCARA/res/".concat(filename)))) {
             double scalingFactor = Math.min(canvasWidth / ORIG_WIDTH, canvasHeight / ORIG_HEIGHT) * scaling;
             List<List<Point>> ret = new ArrayList<>();
             List<Point> pointBuffer = new ArrayList<>();

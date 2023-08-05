@@ -13,17 +13,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 @Config
 public class Platform {
     private DcMotorEx left, right;
-    public static double UP_SPEED = 0.5;
+    public static double UP_SPEED = 1;
     private Telemetry telemetry;
-    public static double DOWN_SPEED = UP_SPEED;
-    public static double CALIBRATING_SPEED = 0.15;
-    public static int UP_POSITION = 50;
-    public static int DOWN_POSITION = 0;
-    public static int TOLERANCE = 5;
-
-    public static PIDFCoefficients OPERATING_PID = new PIDFCoefficients(2.5, 0, 0.5, 5);
-    public static PIDFCoefficients CALIBRATING_PID = new PIDFCoefficients(1.5, 0, 0, 2.5);
-    public static double STALL_CURRENT = 1000;
+    public static double DOWN_SPEED = 1;
+    public static double CALIBRATING_SPEED = 1;
+    public static int UP_POSITION = 350;
+    public static int DOWN_POSITION = 150;
+    public static int TOLERANCE = 20;
+    public static PIDFCoefficients PID = new PIDFCoefficients(7.5, 0.5, 2.5, 10);
+    public static double STALL_CURRENT = 3000;
 
     public final static int HOMING = 0;
     public final static int READY = 1;
@@ -36,17 +34,16 @@ public class Platform {
         right = hardwareMap.get(DcMotorEx.class, "rightPlatform");
         telemetry = opMode.telemetry;
         state = HOMING;
-        // left.setDirection(DcMotorSimple.Direction.REVERSE);
+        // left.setDirection(DcMotor.Direction.REVERSE);
         initMotor(left);
         initMotor(right);
         home();
-        down();
     }
 
     public void initMotor(DcMotorEx motor) {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, CALIBRATING_PID);
-        motor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, OPERATING_PID);
+        motor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, PID);
+        // motor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, OPERATING_PID);
         motor.setTargetPositionTolerance(TOLERANCE);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
@@ -63,6 +60,7 @@ public class Platform {
     public void stopCalibrating() {
         left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        down();
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         ready();
@@ -100,6 +98,10 @@ public class Platform {
         telemetry.addData("Right Current", right.getCurrent(CurrentUnit.MILLIAMPS));
         telemetry.addData("Left Position", left.getCurrentPosition());
         telemetry.addData("Right Position", right.getCurrentPosition());
+        telemetry.addData("Left Target", left.getTargetPosition());
+        telemetry.addData("Right Target", right.getTargetPosition());
+        telemetry.addData("Left Speed", left.getPower());
+        telemetry.addData("Right Speed", right.getPower());
     }
 
     public void update() {

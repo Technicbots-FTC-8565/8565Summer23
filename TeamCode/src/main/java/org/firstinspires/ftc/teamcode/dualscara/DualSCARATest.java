@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class DualSCARATest extends OpMode {
     private DualSCARA scara;
     private GamepadEx gpad1;
-    public static double SENS = 0.00001;
-    public static double L0 = mmToInches(240);
+    public static double SENS = 0.05;
+    public static double L0 = mmToInches(192);
     public static double A1 = mmToInches(108);
     public static double A2 = A1;
     public static double B1 = mmToInches(180);
