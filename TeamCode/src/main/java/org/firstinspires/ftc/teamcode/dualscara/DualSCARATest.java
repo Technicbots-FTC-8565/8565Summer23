@@ -56,5 +56,7 @@ public class DualSCARATest extends OpMode {
         telemetry.addData("T2", scara.T2);
         telemetry.addData("Servo Left", scara.getServoLeft());
         telemetry.addData("Servo Right", scara.getServoRight());
+        telemetry.addData("x", scara.x);
+        telemetry.addData("y", scara.y);
     }
 }

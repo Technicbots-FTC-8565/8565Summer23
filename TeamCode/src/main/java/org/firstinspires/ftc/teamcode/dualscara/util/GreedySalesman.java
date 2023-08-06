@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.dualscara.util;
 
 import static org.firstinspires.ftc.teamcode.dualscara.util.Loader.load;
 
+import android.util.Log;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,7 +45,7 @@ public class GreedySalesman {
             }
         }
 
-        i = route[counter - 1] - 1;
+        i = route[counter] - 1;
 
         for (j = 0; j < distances.length; j++) {
             if ((i != j) && distances[i][j] < min) {
@@ -52,13 +54,19 @@ public class GreedySalesman {
             }
         }
 
-        for (int c : route) route[c]--;
+        for (int c = 0; c < route.length; c++) route[c]--;
 
+        route[route.length - 1] = route.length - 1;
+
+        /*
         int[] parsedRoute = new int[route.length - 1];
         // basically just popping the last int
         System.arraycopy(route, 0, parsedRoute, 0, parsedRoute.length);
+        */
 
-        return parsedRoute;
+        for (int c : route) Log.d("technicbots greedy debug", String.valueOf(c));
+
+        return route;
     }
 
     /**
