@@ -56,17 +56,13 @@ public class GreedySalesman {
 
         for (int c = 0; c < route.length; c++) route[c]--;
 
-        route[route.length - 1] = route.length - 1;
-
-        /*
         int[] parsedRoute = new int[route.length - 1];
         // basically just popping the last int
         System.arraycopy(route, 0, parsedRoute, 0, parsedRoute.length);
-        */
 
-        for (int c : route) Log.d("technicbots greedy debug", String.valueOf(c));
+        for (int c : parsedRoute) Log.d("technicbots greedy debug", String.valueOf(c));
 
-        return route;
+        return parsedRoute;
     }
 
     /**

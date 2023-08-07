@@ -36,7 +36,10 @@ public class Loader {
             while ((line = br.readLine()) != null) {
                 String[] sv = line.split(",");
                 if (prevIndex != Integer.parseInt(sv[0])) {
-                    if (pointBuffer.size() > 5) ret.add(new ArrayList<>(pointBuffer)); // ignore tiny polylines
+                    if (pointBuffer.size() > 5) {
+                        ret.add(new ArrayList<>(pointBuffer)); // ignore tiny polylines
+                        Log.d("technicbots buffer debug", String.valueOf(ret.size()));
+                    }
                     pointBuffer.clear();
                 }
                 Point constrPoint = new Point(Integer.parseInt(sv[0]), Double.parseDouble(sv[1]) * scalingFactor, Double.parseDouble(sv[2]) * scalingFactor, -canvasWidth / 2, 0);
@@ -45,6 +48,11 @@ public class Loader {
                 pointBuffer.add(constrPoint);
                 prevIndex = constrPoint.index;
             }
+            if (pointBuffer.size() > 5) {
+                ret.add(new ArrayList<>(pointBuffer)); // ignore tiny polylines
+                Log.d("technicbots buffer debug", String.valueOf(ret.size()));
+            }
+            pointBuffer.clear();
             return ret;
         } catch (IOException e) {
             throw new RuntimeException(e);

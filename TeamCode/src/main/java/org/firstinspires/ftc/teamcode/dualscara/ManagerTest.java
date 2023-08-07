@@ -25,7 +25,7 @@ public class ManagerTest extends LinearOpMode {
     public void runOpMode() {
         dashboardTelemetry = FtcDashboard.getInstance().getTelemetry();
         changeStatus("Loading polylines");
-        List<List<Point>> segments = load(this, "tmp.csv", CANVAS_WIDTH, CANVAS_HEIGHT, 0.75);
+        List<List<Point>> segments = load(this, "calligraphy.csv", CANVAS_WIDTH, CANVAS_HEIGHT, 0.75);
         changeStatus("Successfully loaded polylines");
         changeStatus("Solving path segments");
         int[] route = GreedySalesman.solve(GreedySalesman.construct(segments));
@@ -33,7 +33,7 @@ public class ManagerTest extends LinearOpMode {
         manager = new Manager(this, segments, route, CANVAS_WIDTH, CANVAS_HEIGHT);
         changeStatus("Calibrating platform");
         while (opModeInInit() && !opModeIsActive() && manager.platform.state == Platform.HOMING) {
-            manager.platform.update(); // homing sequence runs
+            // manager.platform.update(); // homing sequence runs
         }
         changeStatus("Waiting for start");
         waitForStart();

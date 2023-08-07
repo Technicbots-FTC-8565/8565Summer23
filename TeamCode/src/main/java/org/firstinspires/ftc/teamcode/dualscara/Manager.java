@@ -34,11 +34,21 @@ public class Manager {
         scara = new DualSCARA(opMode.hardwareMap, L0, A1, A2, B1, B2);
         platform = new Platform(opMode);
         this.segments = segments;
+        Log.d("technicbots segments length debug", String.valueOf(segments.size()));
         this.route = route;
         this.queue = new ActionQueue();
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
         this.telemetry = FtcDashboard.getInstance().getTelemetry();
+
+        // path to the first point if possible
+        final double x = segments.get(0).get(0).x + L0 / 2;
+        final double y = Range.clip(canvasHeight - segments.get(0).get(0).y, 4, 10);
+        if (scara.canMove(x, y)) {
+            scara.x = x;
+            scara.y = y;
+            scara.update();
+        }
     }
 
     public void start() {
@@ -84,8 +94,8 @@ public class Manager {
             // allow 0.75 inch skipping
             if (segments.get(route[currI]).get(currJ).distanceTo(segments.get(route[cacheI]).get(cacheJ)) > 0.75) {
                 telemetry.addData("Status", "Carrying out skipping");
-                platform.down();
-                queue.addDelayedAction(platform::up, segments.get(route[cacheI]).get(cacheJ).distanceTo(segments.get(route[currI]).get(currJ)) / PATHING_SPEED * 1000 - 75);
+                // platform.down();
+                // queue.addDelayedAction(platform::up, segments.get(route[cacheI]).get(cacheJ).distanceTo(segments.get(route[currI]).get(currJ)) / PATHING_SPEED * 1000 - 75);
             }
             // path to new start of segment
             scara.x = segments.get(route[currI]).get(currJ).x;
