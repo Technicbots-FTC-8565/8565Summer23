@@ -15,8 +15,8 @@ import java.util.List;
 @Config
 public class Loader {
     public static double SCALING_FACTOR = 1;
-    public static double ORIG_WIDTH = 700 * SCALING_FACTOR;
-    public static double ORIG_HEIGHT = 631.7796610169491 * SCALING_FACTOR;
+    public static double ORIG_WIDTH = 1300 * SCALING_FACTOR;
+    public static double ORIG_HEIGHT = 350 * SCALING_FACTOR;
     /**
      * Load a CSV to parsed points
      * @param filename CSV location relative to project's "Assets" folder

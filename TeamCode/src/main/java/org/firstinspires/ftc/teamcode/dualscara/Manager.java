@@ -30,6 +30,7 @@ public class Manager {
     public static double PATHING_SPEED = 3.5;
     private Telemetry telemetry;
     private boolean running = false;
+    public static double Y_OFFSET = 3;
     public Manager(LinearOpMode opMode, List<List<Point>> segments, int[] route, double canvasWidth, double canvasHeight) {
         scara = new DualSCARA(opMode.hardwareMap, L0, A1, A2, B1, B2);
         platform = new Platform(opMode);
@@ -43,7 +44,7 @@ public class Manager {
 
         // path to the first point if possible
         final double x = segments.get(0).get(0).x + L0 / 2;
-        final double y = Range.clip(canvasHeight - segments.get(0).get(0).y, 4, 10);
+        final double y = Range.clip(canvasHeight - segments.get(0).get(0).y - Y_OFFSET, 4, 10);
         if (scara.canMove(x, y)) {
             scara.x = x;
             scara.y = y;
@@ -59,7 +60,7 @@ public class Manager {
     public void goNext() {
         Point point = segments.get(route[currI]).get(currJ);
         double x = point.x + L0 / 2;
-        double y = Range.clip(canvasHeight - point.y, 4, 10);
+        double y = Range.clip(canvasHeight - point.y - Y_OFFSET, 4, 10);
         telemetry.addData("Target x", x);
         telemetry.addData("Target y", y);
         Log.d("technicbots Target x", String.valueOf(x));
