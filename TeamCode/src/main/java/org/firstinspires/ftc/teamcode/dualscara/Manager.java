@@ -27,11 +27,13 @@ public class Manager {
     private ActionQueue queue;
     private double canvasWidth, canvasHeight;
     /** Pathing speed of the arm in inches per second */
-    public static double PATHING_SPEED = 3.5;
-    private Telemetry telemetry;
+    public static double PATHING_SPEED = 5;
+    public static double MAX_SKIP = 0.25;
+    private final Telemetry telemetry;
     private boolean running = false;
-    public static double Y_OFFSET = 3;
-    public Manager(LinearOpMode opMode, List<List<Point>> segments, int[] route, double canvasWidth, double canvasHeight) {
+    private final double xOffset;
+    private final double yOffset;
+    public Manager(LinearOpMode opMode, List<List<Point>> segments, int[] route, double canvasWidth, double canvasHeight, double xOffset, double yOffset) {
         scara = new DualSCARA(opMode.hardwareMap, L0, A1, A2, B1, B2);
         platform = new Platform(opMode);
         this.segments = segments;
@@ -39,17 +41,14 @@ public class Manager {
         this.route = route;
         this.queue = new ActionQueue();
         this.canvasWidth = canvasWidth;
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
         this.canvasHeight = canvasHeight;
         this.telemetry = FtcDashboard.getInstance().getTelemetry();
 
         // path to the first point if possible
-        final double x = segments.get(0).get(0).x + L0 / 2;
-        final double y = Range.clip(canvasHeight - segments.get(0).get(0).y - Y_OFFSET, 4, 10);
-        if (scara.canMove(x, y)) {
-            scara.x = x;
-            scara.y = y;
-            scara.update();
-        }
+        // moveTo(segments.get(0).get(0).x, segments.get(0).get(0).y);
+        // this.queue.addDelayedAction(() -> this.queue.addDelayedAction(platform::up, 500), () -> platform.state == Platform.READY);
     }
 
     public void start() {
@@ -59,17 +58,7 @@ public class Manager {
 
     public void goNext() {
         Point point = segments.get(route[currI]).get(currJ);
-        double x = point.x + L0 / 2;
-        double y = Range.clip(canvasHeight - point.y - Y_OFFSET, 4, 10);
-        telemetry.addData("Target x", x);
-        telemetry.addData("Target y", y);
-        Log.d("technicbots Target x", String.valueOf(x));
-        Log.d("technicbots Target y", String.valueOf(y));
-        if (scara.canMove(x, y)) {
-            scara.x = x;
-            scara.y = y;
-        }
-        else telemetry.addData("Error", "Target coords outside of workspace :(");
+        moveTo(point.x, point.y);
         scara.update();
         currJ += reverse? -1 : 1;
         Log.d("technicbots curri", String.valueOf(currI));
@@ -82,7 +71,7 @@ public class Manager {
             if (currI > segments.size() - 2) {
                 telemetry.addData("Status", "Finished Drawing");
                 telemetry.update();
-                running = false;
+                queue.addDelayedAction(() -> running = false, 250); // don't immediately stop
                 return; // return from fn without queueing the last segment
             }
             reverse = segments.get(route[currI]).get(segments.get(route[currI]).size() - 1)
@@ -93,14 +82,13 @@ public class Manager {
             if (reverse) currJ = segments.get(route[currI]).size() - 1;
             else currJ = 0;
             // allow 0.75 inch skipping
-            if (segments.get(route[currI]).get(currJ).distanceTo(segments.get(route[cacheI]).get(cacheJ)) > 0.75) {
+            if (segments.get(route[currI]).get(currJ).distanceTo(segments.get(route[cacheI]).get(cacheJ)) > MAX_SKIP) {
                 telemetry.addData("Status", "Carrying out skipping");
                 // platform.down();
-                // queue.addDelayedAction(platform::up, segments.get(route[cacheI]).get(cacheJ).distanceTo(segments.get(route[currI]).get(currJ)) / PATHING_SPEED * 1000 - 75);
+                // queue.addDelayedAction(platform::up, segments.get(route[cacheI]).get(cacheJ).distanceTo(segments.get(route[currI]).get(currJ)) / PATHING_SPEED * 1000 + 1000);
             }
             // path to new start of segment
-            scara.x = segments.get(route[currI]).get(currJ).x;
-            scara.y = segments.get(route[currI]).get(currJ).y;
+            queue.addDelayedAction(() -> moveTo(segments.get(route[currI]).get(currJ).x, segments.get(route[currI]).get(currJ).y), 300);
             // append the next point to the pathing queue
             telemetry.addData("Cache i", cacheI);
             telemetry.addData("Cache j", cacheJ);
@@ -109,7 +97,7 @@ public class Manager {
             Log.d("technicbots cache j", String.valueOf(cacheJ));
             Log.d("technicbots new j", String.valueOf(currJ));
             telemetry.update();
-            queue.addDelayedAction(this::goNext, segments.get(route[cacheI]).get(cacheJ).distanceTo(segments.get(route[currI]).get(currJ)) / PATHING_SPEED * 1000);
+            queue.addDelayedAction(this::goNext, segments.get(route[cacheI]).get(cacheJ).distanceTo(segments.get(route[currI]).get(currJ)) / PATHING_SPEED * 1000); // + 500);
         }
         else if ((!reverse && currJ < segments.get(route[currI]).size() - 1) || (reverse && currJ > 0)) {
             // append the next point to the pathing queue
@@ -122,10 +110,26 @@ public class Manager {
         telemetry.update();
     }
 
+    public void moveTo(double x, double y) {
+        double modX = Range.clip(x + L0 / 2 + xOffset, -4, 14);
+        double modY = Range.clip(canvasHeight - y + yOffset, 3, 11);
+        telemetry.addData("Target x", x);
+        telemetry.addData("Target y", y);
+        Log.d("technicbots Target x", String.valueOf(x));
+        Log.d("technicbots Target y", String.valueOf(y));
+        if (scara.canMove(modX, modY)) {
+            scara.x = modX;
+            scara.y = modY;
+            scara.update();
+        }
+        else telemetry.addData("Error", "Target coords outside of workspace :(");
+    }
+
     public void update() {
         telemetry.addData("Status", "Pathing");
         telemetry.update();
         queue.update();
+        // platform.update();
     }
 
     public boolean done() {

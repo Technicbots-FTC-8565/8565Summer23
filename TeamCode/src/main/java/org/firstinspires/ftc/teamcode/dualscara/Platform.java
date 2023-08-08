@@ -13,15 +13,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 @Config
 public class Platform {
     private DcMotorEx left, right;
-    public static double UP_SPEED = 1;
+    public static double UP_SPEED = 0.9;
     private Telemetry telemetry;
     public static double DOWN_SPEED = 1;
-    public static double CALIBRATING_SPEED = 0.25;
-    public static int UP_POSITION = 350;
-    public static int DOWN_POSITION = 20;
+    public static double CALIBRATING_SPEED = 0.5;
+    public static int UP_POSITION = 300;
+    public static int DOWN_POSITION = 0;
     public static int TOLERANCE = 20;
     public static PIDFCoefficients PID = new PIDFCoefficients(7.5, 0.5, 2.5, 10);
-    public static double STALL_CURRENT = 1000;
+    public static double STALL_CURRENT = 6000;
 
     public final static int HOMING = 0;
     public final static int READY = 1;

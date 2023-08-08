@@ -14,9 +14,6 @@ import java.util.List;
 
 @Config
 public class Loader {
-    public static double SCALING_FACTOR = 1;
-    public static double ORIG_WIDTH = 1300 * SCALING_FACTOR;
-    public static double ORIG_HEIGHT = 350 * SCALING_FACTOR;
     /**
      * Load a CSV to parsed points
      * @param filename CSV location relative to project's "Assets" folder
@@ -25,9 +22,9 @@ public class Loader {
      * @param scaling Factor to scale the image by
      * @return The parsed points from the CSV file
      */
-    public static List<List<Point>> load(OpMode opMode, String filename, double canvasWidth, double canvasHeight, double scaling) {
+    public static List<List<Point>> load(OpMode opMode, String filename, double origWidth, double origHeight, double canvasWidth, double canvasHeight, double scaling) {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(opMode.hardwareMap.appContext.getAssets().open(filename)))) {
-            double scalingFactor = Math.min(canvasWidth / ORIG_WIDTH, canvasHeight / ORIG_HEIGHT) * scaling;
+            double scalingFactor = Math.min(canvasWidth / origWidth, canvasHeight / origHeight) * scaling;
             Log.d("technicbots scalingfactor", String.valueOf(scalingFactor));
             List<List<Point>> ret = new ArrayList<>();
             List<Point> pointBuffer = new ArrayList<>();
